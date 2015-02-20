@@ -31,9 +31,9 @@ public class SearchListings {
         	config.setHttpHeaderLoggingEnabled(false);//removes initial collection log
         	config.setSoapMessageLoggingEnabled(false); //removes Soap Message log for all items
         	config.setApplicationId("User Application Id"); //Sign up for the EBay Dev Program to get a set of 
-        	//application keys
+       		//application keys
 
-        	//Creates the service client
+            //Creates the service client
             FindingServicePortType serviceClient = FindingServiceClientFactory.getServiceClient(config);
             
             //Request Object
