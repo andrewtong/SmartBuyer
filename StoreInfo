@@ -11,9 +11,10 @@ import sqlCommunication.StoreInfo;
 
 
 public class StoreInfo {
+	//Configure these as required
 	private static String database = "listingsdb";
-	private static String username = "Andrew";
-	private static String password = "lobster";
+	private static String username = "username"; 
+	private static String password = "password";
 	private static String url = "jdbc:postgresql://localhost/" + database;
 	private static String table = "listings";
 	
