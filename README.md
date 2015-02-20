@@ -1,7 +1,6 @@
 # SmartBuyer
 Searches EBay for underpriced listings by looking for pricing patterns among user-input found items.
 
-
 v1.0.0
 The intent of this software is to search for underpriced listings using searches sorted by the newest listings avaliable. Using
 EBay Finding API, it is possible to look for underpriced items provided that there is a baseline price to reference.  This
