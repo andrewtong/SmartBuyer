@@ -10,8 +10,8 @@ public class SearchDetails {
 	//This table contains the variables of interest.  For this particular project, it is focused on 
 	//designer brands.  The program will attempt to match the brand to the listing title and find a match.
 	private static final HashSet<String> designer = new HashSet<String>() {{
-    //Brands of Interest are included here
-    //ex. add("Brand Name");
+    	//Brands of Interest are included here
+    	//ex. add("Brand Name");
 	}};
 	
 	//Currently the program only supports string matches where letters are in the correct order
