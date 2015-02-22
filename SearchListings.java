@@ -30,10 +30,9 @@ public class SearchListings {
         	ClientConfig config = new ClientConfig();
         	config.setHttpHeaderLoggingEnabled(false);//removes initial collection log
         	config.setSoapMessageLoggingEnabled(false); //removes Soap Message log for all items
-        	config.setApplicationId("User Application Id"); //Sign up for the EBay Dev Program to get a set of 
-       		//application keys
+        	config.setApplicationId("User Application ID");
 
-            //Creates the service client
+        	//Creates the service client
             FindingServicePortType serviceClient = FindingServiceClientFactory.getServiceClient(config);
             
             //Request Object
@@ -42,6 +41,8 @@ public class SearchListings {
             
             StoreInfo.establishConnection();
             StoreInfo.lookupListingsTable();
+            StoreInfo.lookupComparisonTable();
+            
             
             //Request Parameters
             //request.setKeywords("Product Keywords");
@@ -103,16 +104,25 @@ public class SearchListings {
             request.setSortOrder(SortOrderType.START_TIME_NEWEST);
             //
             
+            int searchentries = 30;
             //Number of Returns per Search - setEntriesPerPage(int)
             PaginationInput searches = new PaginationInput();
-            searches.setEntriesPerPage(100); //Number of items found per search, max 100
+            searches.setEntriesPerPage(searchentries); //Number of items found per search, max 100
             request.setPaginationInput(searches);
             //
             
             //Output Object
             FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(request);
-            System.out.println("Found " + result.getSearchResult().getCount() + "relevant items." );
+            System.out.println("Found " + result.getSearchResult().getCount() + " relevant items." );
+            //
             
+            
+            long firstid = 0;
+			int loopcount = 0;
+            long lastid = StoreInfo.checkSearched();
+            System.out.println(lastid);
+			StoreInfo.resetLastFound();
+			
             SimpleDateFormat dateformat = new SimpleDateFormat("MM-dd-yyyy");
             List<SearchItem> items = result.getSearchResult().getItem();
             
@@ -122,6 +132,11 @@ public class SearchListings {
         		long itemid = Long.parseLong(item.getItemId());
         		String categorytype = item.getPrimaryCategory().getCategoryName();
         		String listingdate = dateformat.format(item.getListingInfo().getStartTime().getTime());
+        		loopcount += 1;
+        		
+        		if(loopcount == 1){
+        			firstid = itemid;
+        		}
         		
         		if(brandname != "none" && !StoreInfo.checkDuplicate(itemid)){
                 	if(item.getListingInfo().isBuyItNowAvailable()){
@@ -131,6 +146,17 @@ public class SearchListings {
 	            		StoreInfo.insertData(itemid, brandname, categorytype, new BigDecimal(item.getSellingStatus().getCurrentPrice().getValue()), listingdate);
 	            	}
         		}
+        		
+        		if(loopcount == searchentries){
+        			StoreInfo.insertReference(firstid);
+        			System.out.println("Scanned through " + loopcount + " new items.");
+        		} 
+        		else if(lastid == itemid){
+        			StoreInfo.insertReference(firstid);
+        			System.out.println("Scanned through " + loopcount + " new items.");
+        			break;
+        		}
+	
             }
             
         } catch (Exception ex) {
