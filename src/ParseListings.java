@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package at.smartBuyer.parselistings;
 
 import java.math.BigDecimal;
@@ -95,3 +96,6 @@ public class ParseListings {
 	}
 
 }
+=======
+
+>>>>>>> 1573382233e8d395b7b5b201ffbe7e0fe0ee645c
