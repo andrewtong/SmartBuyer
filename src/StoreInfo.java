@@ -1,14 +1,12 @@
-package sqlCommunication;
+package at.smartBuyer.sqlcommunication;
 
 import java.math.BigDecimal;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import sqlCommunication.StoreInfo;
-
 
 public class StoreInfo {
 	private static String database = "listingsdb";
@@ -256,6 +254,8 @@ public class StoreInfo {
 			System.out.println("Something went wrong while checking for existing listings.");
 			e.printStackTrace();
 		}
+		System.out.println("Comparison table is empty.  This will only occur on the first run time through, otherwise"
+				+ "an SQL related error has occured.");
 		return -1;
 	}
 
