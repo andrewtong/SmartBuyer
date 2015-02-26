@@ -16,7 +16,7 @@ import com.ebay.services.finding.SortOrderType;
 public class SearchListings {
 	
 	public static final int searchentries = 100;
-	public static final String appid = "User App Id";
+	public static final String appid = "User App ID";
 	
 	public static FindItemsAdvancedResponse searchListings(){
 		try {
