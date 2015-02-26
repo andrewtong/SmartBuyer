@@ -1,9 +1,9 @@
-v1.1.1
+Version 1.1.1
 2/22/2015
 Reorginization of files to for a cleaner and more readable appearance.  Documentation has been thoroughly added to explain what
 occurs at every stage for the reader and/or user to grasp a solid understanding of how the software behaves.
 
-v1.1.0
+Version 1.1.0
 2/20/2015
 Minimizes search redundancies to prevent checks on item listings that have already been checked.  This is done via tracking the
 ID of the first searched item and referencing it against future search checks (e.x. If the program has previously searched items
