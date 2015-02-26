@@ -115,10 +115,11 @@ public class SearchListings {
 		FindItemsAdvancedResponse result = serviceClient.findItemsAdvanced(request);
 		System.out.println("Found " + result.getSearchResult().getCount() + " relevant items." );
 		return result;
-        } catch (Exception ex) {
+		
+        	} catch (Exception ex) {
         	// Handles Exceptions
 		ex.printStackTrace();
-        }
+        	}
 		System.out.println("Something went horribly wrong!");
 		return null;
 	}
