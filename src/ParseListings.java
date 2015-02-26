@@ -52,9 +52,7 @@ public class ParseListings {
 		
 		for(SearchItem item : items) {
         	//Currently does not support shipping costs due to NPE from the Ebay API.
-			
-			
-			
+        	
 			//Reads brand name of the listing from the listing title
     		String brandname = sd.getRegisteredBrand(item.getTitle());
     		
