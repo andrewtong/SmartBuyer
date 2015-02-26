@@ -41,8 +41,8 @@ public class ParseListings {
 			
 			//The last found crc value will also have to be recorded such that it can be used as a record
 			//for future runs.
-	    	crcvalue = sd.getcrcValue(SearchDetails.sbfile);
-	    }
+			crcvalue = sd.getcrcValue(SearchDetails.sbfile);
+		}
 	    
 	    //Regardless of whether the SQL table is updated, the HashSet that holds the keywords (in this particular 
 	    //case, brands) needs to be updated from the current table, since it is faster to do a comparison between
@@ -50,56 +50,54 @@ public class ParseListings {
 	    SearchDetails.designer = si.retrieveCategorical();
 		
 		for(SearchItem item : items) {
-        	//Currently does not support shipping costs due to NPE from the Ebay API.
-        	
+			//Currently does not support shipping costs due to NPE from the Ebay API.
+			
 			//Reads brand name of the listing from the listing title
-    		String brandname = sd.getRegisteredBrand(item.getTitle());
-    		
-    		//Retrieves the unique item ID associated with the listing item
-    		long itemid = Long.parseLong(item.getItemId());
-
-    		
-    		//Retrieves the category the listing item is associated with, is typically similar to 
-    		//the category assigned in the aspect filters (if applicable)
-    		String categorytype = item.getPrimaryCategory().getCategoryName();
-    		
-    		//Retrieves the listing date that the item was posted on
-    		String listingdate = dateformat.format(item.getListingInfo().getStartTime().getTime());
-    		loopcount += 1;
-    		
-    		if(loopcount == 1){
-    			firstid = itemid;
-    		}
-    		
-    		//If the item is a brand of interest and has not been registered before, it is then stored into
+			String brandname = sd.getRegisteredBrand(item.getTitle());
+			
+			//Retrieves the unique item ID associated with the listing item
+			long itemid = Long.parseLong(item.getItemId());
+			
+			//Retrieves the category the listing item is associated with, is typically similar to 
+			//the category assigned in the aspect filters (if applicable)
+			String categorytype = item.getPrimaryCategory().getCategoryName();
+			
+			//Retrieves the listing date that the item was posted on
+			String listingdate = dateformat.format(item.getListingInfo().getStartTime().getTime());
+			loopcount += 1;
+			
+			if(loopcount == 1){
+				firstid = itemid;
+			}
+			
+			//If the item is a brand of interest and has not been registered before, it is then stored into
     		//the SQL database.  (see at.smartBuyer.sqlcommunication.StoreInfo for functions)
-    		if(brandname != "none" && !si.checkDuplicate(itemid)){
-            	if(item.getListingInfo().isBuyItNowAvailable()){
-            		si.insertData(itemid, brandname, categorytype, new BigDecimal(item.getListingInfo().getBuyItNowPrice().getValue()), listingdate);
-            		itemsfound++;
-            	}
-            	else{
-            		si.insertData(itemid, brandname, categorytype, new BigDecimal(item.getSellingStatus().getCurrentPrice().getValue()), listingdate);
-            		itemsfound++;
-            	}
-    		}
-    		
-    		//The program then proceeds to check whether the item has been scanned before.  The software stops once 
-    		//it realizes it has scanned an item it has seen before, or if the list of search entries
-    		//has been processed through.
-    		if(loopcount == SearchListings.searchentries){
-    			si.updateLastFound(firstid, crcvalue);
-    			System.out.println("Scanned through " + loopcount + " new items.");
-    			System.out.println("Added " + itemsfound + " new items to the database.");	
-    		} 
-    		else if(lastid == itemid){
-    			si.updateLastFound(firstid, crcvalue);
-    			System.out.println("Scanned through " + (loopcount-1) + " new items.");
-    			System.out.println("Added " + itemsfound + " new items to the database.");	
-    			break;
-    		}
-
-        }
+			if(brandname != "none" && !si.checkDuplicate(itemid)){
+	        	if(item.getListingInfo().isBuyItNowAvailable()){
+	        		si.insertData(itemid, brandname, categorytype, new BigDecimal(item.getListingInfo().getBuyItNowPrice().getValue()), listingdate);
+	        		itemsfound++;
+				}
+				else{
+					si.insertData(itemid, brandname, categorytype, new BigDecimal(item.getSellingStatus().getCurrentPrice().getValue()), listingdate);
+					itemsfound++;
+				}
+			}
+			
+			//The program then proceeds to check whether the item has been scanned before.  The software stops once 
+			//it realizes it has scanned an item it has seen before, or if the list of search entries
+			//has been processed through.
+			if(loopcount == SearchListings.searchentries){
+				si.updateLastFound(firstid, crcvalue);
+				System.out.println("Scanned through " + loopcount + " new items.");
+				System.out.println("Added " + itemsfound + " new items to the database.");	
+			} 
+			else if(lastid == itemid){
+				si.updateLastFound(firstid, crcvalue);
+				System.out.println("Scanned through " + (loopcount-1) + " new items.");
+				System.out.println("Added " + itemsfound + " new items to the database.");	
+				break;
+			}
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -111,20 +109,19 @@ public class ParseListings {
 		StoreInfo.establishConnection();
 		
 		//The listing table stores pricing information across brands of interest.
-        StoreInfo.lookupListingsTable();
-        
-        //The comparison table is used as a lookup to check up to what point can the software stop searching.
-        //For example, if the search has processed entries of id 1100 to 1000 (because it searches by newest), then
-        //searching anything older than or equal to id 1100 is redundant.
-        StoreInfo.lookupComparisonTable();
+		StoreInfo.lookupListingsTable();
 		
-        StoreInfo.lookupCategoricalTable();
+		//The comparison table is used as a lookup to check up to what point can the software stop searching.
+		//For example, if the search has processed entries of id 1100 to 1000 (because it searches by newest), then
+		//searching anything older than or equal to id 1100 is redundant.
+		StoreInfo.lookupComparisonTable();
+		
+		StoreInfo.lookupCategoricalTable();
         
-		//The result object contains a list of items pertaining to what the user specified, and can be processed
-		//through similarly how a normal list operates.
+        //The result object contains a list of items pertaining to what the user specified, and can be processed
+        //through similarly how a normal list operates.
         List<SearchItem> items = result.getSearchResult().getItem();
         parseSearchResults(items);
-
+		
 	}
-
 }
