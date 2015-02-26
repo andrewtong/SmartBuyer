@@ -1,6 +1,4 @@
-Changelog
-
-v1.2.0
+Version 1.2.0
 2/26/15
 The concept of v1.2.0 is to introduce data driven metrics to predict the marketability of the items the user searches for. This 
 is initiallized via first of all storing all categorical words (e.x. brands/models/year/etc) in a separate table as opposed to
