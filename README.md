@@ -13,8 +13,11 @@ easily understood from a high-level view.
 This software operates on:
 
 JDK 1.8
+
 PostgreSQL v9.4 with JDBC4 drivers (see. https://jdbc.postgresql.org/download.html)
+
 EBay Finding API via Java SDK - Finding Kit (see. https://go.developer.ebay.com/javasdk)
+
 Guava 18.0 - https://code.google.com/p/guava-libraries/
 
 Currently the direction of the program is to optimize the software performance by minimizing search redundancies and perform 
