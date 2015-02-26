@@ -20,7 +20,7 @@ public class ParseListings {
 		StoreInfo si = new StoreInfo();
 		
 		//Variables used to manage information transferred between SQL database and the Java program
-        	long firstid = 0;
+		long firstid = 0;
 		int loopcount = 0;
 		int itemsfound = 0;
 		SimpleDateFormat dateformat = new SimpleDateFormat("MM-dd-yyyy");
@@ -29,19 +29,18 @@ public class ParseListings {
 		
 		//Prior to running through the results, we initially check for the previously searched ID,
 		//as well as the previously known crc value.
-	    lastinfo = si.checkSearched();
-	    long lastid = lastinfo.itemid;
-	    long crcvalue = lastinfo.checksumvalue;
-	    
-	    
-	    //The crc values are compared and checked to see whether the user file needs to be scanned.
-	    if(sd.getcrcValue(SearchDetails.sbfile) != crcvalue){
-	    	//Re-scan the user file and add differences into the SQL categorical table
-	    	//This will insert all new entries from the file into the SQL table
-	    	sd.checkFile(SearchDetails.sbfile);
-	    	
-	    	//The last found crc value will also have to be recorded such that it can be used as a record
-	    	//for future runs.
+		lastinfo = si.checkSearched();
+		long lastid = lastinfo.itemid;
+		long crcvalue = lastinfo.checksumvalue;
+		
+		//The crc values are compared and checked to see whether the user file needs to be scanned.
+		if(sd.getcrcValue(SearchDetails.sbfile) != crcvalue){
+			//Re-scan the user file and add differences into the SQL categorical table
+			//This will insert all new entries from the file into the SQL table
+			sd.checkFile(SearchDetails.sbfile);
+			
+			//The last found crc value will also have to be recorded such that it can be used as a record
+			//for future runs.
 	    	crcvalue = sd.getcrcValue(SearchDetails.sbfile);
 	    }
 	    
