@@ -358,10 +358,6 @@ public class StoreInfo {
 		}
 		return hs;
 	}
-	
-	
-	public static void main(String[] args){
 
-	}
 }
 
