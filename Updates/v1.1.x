@@ -1,5 +1,3 @@
-Changelog
-
 v1.1.1
 2/22/2015
 Reorginization of files to for a cleaner and more readable appearance.  Documentation has been thoroughly added to explain what
@@ -12,4 +10,3 @@ ID of the first searched item and referencing it against future search checks (e
 A through F, then if it does research A, it knows that subsequent searches have already been parsed). A second table on
 PostgreSQL stores the information regarding the search ID the software is to lookout for. The same reference table is likely to
 be used for other measures to improve performance in future versions.
-
