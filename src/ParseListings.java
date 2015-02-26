@@ -44,10 +44,10 @@ public class ParseListings {
 			crcvalue = sd.getcrcValue(SearchDetails.sbfile);
 		}
 	    
-	    //Regardless of whether the SQL table is updated, the HashSet that holds the keywords (in this particular 
-	    //case, brands) needs to be updated from the current table, since it is faster to do a comparison between
-	    //sets of data within the JVM as opposed to having to constantly compare with a external table.
-	    SearchDetails.designer = si.retrieveCategorical();
+		//Regardless of whether the SQL table is updated, the HashSet that holds the keywords (in this particular 
+		//case, brands) needs to be updated from the current table, since it is faster to do a comparison between
+		//sets of data within the JVM as opposed to having to constantly compare with a external table.
+		SearchDetails.designer = si.retrieveCategorical();
 		
 		for(SearchItem item : items) {
 			//Currently does not support shipping costs due to NPE from the Ebay API.
@@ -71,7 +71,7 @@ public class ParseListings {
 			}
 			
 			//If the item is a brand of interest and has not been registered before, it is then stored into
-    		//the SQL database.  (see at.smartBuyer.sqlcommunication.StoreInfo for functions)
+    			//the SQL database.  (see at.smartBuyer.sqlcommunication.StoreInfo for functions)
 			if(brandname != "none" && !si.checkDuplicate(itemid)){
 	        	if(item.getListingInfo().isBuyItNowAvailable()){
 	        		si.insertData(itemid, brandname, categorytype, new BigDecimal(item.getListingInfo().getBuyItNowPrice().getValue()), listingdate);
@@ -118,10 +118,9 @@ public class ParseListings {
 		
 		StoreInfo.lookupCategoricalTable();
         
-        //The result object contains a list of items pertaining to what the user specified, and can be processed
-        //through similarly how a normal list operates.
-        List<SearchItem> items = result.getSearchResult().getItem();
-        parseSearchResults(items);
-		
+        	//The result object contains a list of items pertaining to what the user specified, and can be processed
+        	//through similarly how a normal list operates.
+		List<SearchItem> items = result.getSearchResult().getItem();
+        	parseSearchResults(items);
 	}
 }
