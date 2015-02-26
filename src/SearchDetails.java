@@ -75,22 +75,20 @@ public class SearchDetails {
 			System.out.println("No reference file exists or the directory is incorrect.");
 			return;
 		}
-        try {
-            Scanner input = new Scanner(file);
-            while (input.hasNextLine()) {
-                String line = input.nextLine();
-                //Because the text file may potentially contain anything, it is important that all ' marks are 
-                //removed to ensure that the SQL database does not misinterpret the meaning.
-                line = line.replace("'", "");
-                if(!si.checkCategoricalDuplicate(line)){
-                	si.insertCategorical(line);
-                }
-            }
-            input.close();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
+        	try {
+        		Scanner input = new Scanner(file);
+        		while (input.hasNextLine()) {
+			String line = input.nextLine();
+			//Because the text file may potentially contain anything, it is important that all ' marks are 
+			//removed to ensure that the SQL database does not misinterpret the meaning.
+			line = line.replace("'", "");
+			if(!si.checkCategoricalDuplicate(line)){
+				si.insertCategorical(line);
+			}
+			input.close();
+        		}
+        	} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }
