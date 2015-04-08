@@ -2,6 +2,7 @@ package at.smartBuyer.detailabstraction;
 
 import java.io.File;
 
+import java.math.BigDecimal;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
