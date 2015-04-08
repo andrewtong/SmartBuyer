@@ -83,7 +83,7 @@ public class SearchDetails {
 			//removed to ensure that the SQL database does not misinterpret the meaning.
 			line = line.replace("'", "");
 			if(!si.checkCategoricalDuplicate(line)){
-				si.insertCategorical(line);
+				si.initiateCategorical(line, 0, new BigDecimal(0), 0, 0);
 			}
 			input.close();
         		}
