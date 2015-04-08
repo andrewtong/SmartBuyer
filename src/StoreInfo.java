@@ -1,12 +1,20 @@
 package at.smartBuyer.sqlcommunication;
 
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
+import at.smartBuyer.metadata.GenerateResults;
 
 public class StoreInfo {
 	public static String database = "listingsdb";
@@ -130,7 +138,7 @@ public class StoreInfo {
 			try {
 				statement = connection.createStatement();
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + cattable + " (name varchar(50) PRIMARY KEY, frequency int, "
-						+ "lastseen date, appearancerate numeric(5,2), averageprice numeric(7,2))");
+						+ "lastseen date, averageprice numeric(7,2), marketability int, profitability int)");
 				statement.close();
 				System.out.println("Accessing table: " + table);
 			} catch (SQLException e) {
@@ -197,17 +205,157 @@ public class StoreInfo {
 		}
 	}
 	
-	public void insertCategorical(String name){
+	public void insertCategorical(String name, int freq, String date, BigDecimal price, int marketvalue, int profitvalue){
 		try {
 			statement = connection.createStatement();
-			statement.executeUpdate("INSERT INTO " + cattable +" (name) "
-			+ "VALUES ('" + name + "')");
+			statement.executeUpdate("INSERT INTO " + cattable +" (name, frequency, lastseen, averageprice, marketability, profitability) "
+			+ "VALUES ('" + name + "'," + freq + ",'" + date + "'," + price + "," + marketvalue + "," + profitvalue + ")");
 			statement.close();
 		} catch (SQLException e){
 			System.out.println("Failed to insert data elements into table: " + reftable);
 			e.printStackTrace();
 		}
 	}
+	
+	public void initiateCategorical(String name, int freq, BigDecimal price, int marketvalue, int profitvalue){
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate("INSERT INTO " + cattable + 
+					" (name, frequency, averageprice, marketability, profitability) "
+			+ "VALUES ('" + name + "'," + freq + "," + price + "," + marketvalue + "," + profitvalue + ")");
+			statement.close();
+		} catch (SQLException e){
+			System.out.println("Failed to insert data elements into table: " + reftable);
+			e.printStackTrace();
+		}
+	}
+
+	//StoreInfo.resetCatTable is used to catch version v1.2 users up to date with the v1.3 patch. The 1.3 
+	//version officially introduces the usage of metadata to give the user feedback with how the searches
+	//are proceeding and how marketable as well as how profitable an item may be.  For v1.2 users, running
+	//StoreInfo.resetCatTable once under the main function is all that will be required to be able to use
+	//the next patch.  A patch check will likely be added into the future to prevent users from having
+	//to apply this function manually.
+	public static void resetCatTable(){
+		try{
+			statement = connection.createStatement();
+			Statement statementsecond = connection.createStatement();
+			Statement statementthird = connection.createStatement();
+			
+			rset = statement.executeQuery("SELECT name FROM " + cattable);
+			while(rset.next()){
+				ResultSet total = statementsecond.executeQuery("SELECT COUNT (*) FROM " + table + 
+						" WHERE itembrand = '" + rset.getString("name") + "'");
+				if(total.next()){
+					int totalentries = total.getInt("COUNT");
+					Statement gatherexistingentries = connection.createStatement();
+					ResultSet exists = gatherexistingentries.executeQuery("SELECT frequency FROM " + cattable + 
+							" WHERE name = '" + rset.getString("name") + "'");
+					if(exists.next()){
+						int existingentries = exists.getInt("frequency");
+						
+						System.out.println("total " + totalentries);
+						System.out.println("existing " + existingentries);
+						
+						if(totalentries != existingentries){
+							
+							//Parameters that are retrievied
+							String lastseen = "";
+							BigDecimal avgprice = new BigDecimal(0);
+							int marketability;
+							int profitability;
+							
+							
+							Statement getentryinfo = connection.createStatement();
+							
+							//Gets the Date of Last Appearance
+							ResultSet entryinfo = getentryinfo.executeQuery("SELECT max(listingdate) AS lastseen FROM " + table + 
+									" WHERE itembrand = '" + rset.getString("name") + "'");
+							while(entryinfo.next()){
+								lastseen = entryinfo.getString("lastseen");
+							}
+							
+
+							//Get the Average Price
+							ResultSet priceinfo = getentryinfo.executeQuery("SELECT avg(price) AS avgprice FROM " + table + 
+									" WHERE itembrand = '" + rset.getString("name") + "'");
+							while(priceinfo.next()){
+								avgprice = priceinfo.getBigDecimal("avgprice");
+								avgprice = avgprice.setScale(2, RoundingMode.CEILING);
+							}
+							
+							//Get the Number of Search Results in the Past Week
+							GenerateResults md = new GenerateResults();
+							
+							DateFormat df = new SimpleDateFormat("yyyy/mm/dd");
+							Calendar cal = Calendar.getInstance();
+							cal.add(Calendar.DATE, -7);
+							String lastdate = df.format(cal.getTime()).toString();
+							int oneweekquantity = 0;
+						
+							//Get the Marketability Value by determining number of listings within past week
+							//SELECT COUNT(*) AS blah FROM listings WHERE itembrand = 'name' AND listingdate > 'date';
+							ResultSet marketvalue = getentryinfo.executeQuery("SELECT COUNT(*) AS marketvalue FROM " + table + 
+									" WHERE itembrand = '" + rset.getString("name") + "' AND listingdate > '" + lastdate + "'");
+							while(marketvalue.next()){
+								oneweekquantity += marketvalue.getInt("marketvalue");
+							}
+							
+							marketability = md.calculateMarketability(oneweekquantity);
+							
+							
+							//Get the Total Number of Prices Found in the Last Month to determine Profitability
+							//Find the date that was 31 days back back
+							Calendar calen = Calendar.getInstance();
+							calen.add(Calendar.DATE, -31);
+							String onemonthback = df.format(cal.getTime()).toString();
+							List<BigDecimal> onemonthofprices = new ArrayList<BigDecimal>();
+							
+							ResultSet profitvalue = getentryinfo.executeQuery("SELECT price AS profitvalue FROM " + table + 
+									" WHERE itembrand = '" + rset.getString("name") + "' AND listingdate > '" + onemonthback + "'");
+							while(profitvalue.next()){
+								onemonthofprices.add(marketvalue.getBigDecimal("profitvalue"));
+							}
+							
+							profitability = md.calculateProfitability(onemonthofprices);
+							
+							StoreInfo unit = new StoreInfo();
+							unit.insertCategorical(rset.getString("name"), totalentries, lastseen, avgprice, marketability, profitability);
+
+							//update values on
+							
+						}
+						
+					}
+					
+					gatherexistingentries.close();
+				}
+				else{
+					System.out.println("0");
+					//statementthird.executeUpdate("UPDATE " + cattable + " SET frequency = " + 0 + ", averageprice = " + 0 + ", marketability = " + 
+					//0 + ", profitability = " + 0 + " WHERE name = '" + rset.getString("name") + "'");
+				}
+			}
+			
+			statement.close();
+			statementsecond.close();
+			statementthird.close();
+			
+			
+		} catch (SQLException e){
+			System.out.println("Error occured while resetting values of table: " + cattable);
+			e.printStackTrace();
+		}
+	}
+	
+	public static void patchCatTable(){
+		
+	}
+	
+	public static void updateListingsCatTable(){
+		
+	}
+	
 	
 	//Searches for underpriced items below a threshold value.  searchLowPricesAllBrands is primarily used
 	//when the number of listings in the PSQL table is still very minimal, and where there is insufficient
