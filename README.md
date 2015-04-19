@@ -1,30 +1,51 @@
-# SmartBuyer v1.2.0
-Searches EBay for underpriced listings by looking for pricing patterns among user-input found items.
+# SmartBuyer v2.0
+
+**About**
+
+SmartBuyer searches EBay listings for underpriced items by looking for pricing patterns among user-input found items.  The
+items searched are with accordance to what the user wants to find.  The search can be altered by refining the search 
+variables located in SearchListings.java.
 
 The intent of this software is to search for underpriced listings using searches sorted by the newest listings avaliable. 
 Using the EBay Finding API, it is possible to look for underpriced items provided that there is a baseline price to 
 reference.  This program captures pricing information across items and is currently set to do price comparisons across brands
-as its means of searching for items of interest.
+as its means of searching for items of interest.  
 
-The main file is located on ParseListings.java while the remainder of the files compliment the software.  Documentation has 
-been added throughout the files to emphasize in a simple manner what the function is meant to do such that the process can be
-easily understood from a high-level view.
+This software utilizes several libraries to perform its computations.  It is recommend to use the listed or later versions
+when using SmartBuyer.
 
-This software operates on:
++ JDK 1.8
++ PostgreSQL v9.4 with JDBC4 drivers (see. https://jdbc.postgresql.org/download.html)
++ EBay Finding API via Java SDK - Finding Kit (see. https://go.developer.ebay.com/javasdk)
++ Guava 18.0 - https://code.google.com/p/guava-libraries/
++ Apache Commons Math 3.5 - http://commons.apache.org/proper/commons-math/download_math.cgi
 
-JDK 1.8
+**How Does SmartBuyer Work?**
 
-PostgreSQL v9.4 with JDBC4 drivers (see. https://jdbc.postgresql.org/download.html)
+The initial step of SmartBuyer is to determine what you would like the algorithm to search for.  For example, if I have
+a list of brands, then I would write them to a file, and a checksum feature is used to determine whether the file has
+been updated or not.  If so, the database tables will be updated prior to the search such that the algorithm will know 
+what items to search for.  The absolute file directory can be found in SearchDetail.java.
 
-EBay Finding API via Java SDK - Finding Kit (see. https://go.developer.ebay.com/javasdk)
+The software then uses the EBay API to find the newest 100 items.  The API has a maximum of 100 listings along with their 
+respective listing details that can be returned for a given search.  SmartBuyer also stores the last-searched item id from 
+the previous run to prevent duplicate searches.  Because of this, the results from using SmartBuyer is highly contingent 
+on how frequent searches are performed.
 
-Guava 18.0 - https://code.google.com/p/guava-libraries/
+For each scanned listing, if the algorithm detects that the listing is an item of interest *and* has not been previously 
+registered, it stores the listing along with its associated pricing information in a database, which in this project 
+is referred to as the listings table. A second check is performed against the existing pricing information for the type of
+information, which is stored in the categorical table.  If the scanned item meets a particular pricing threshold, it will
+be flagged as a low price item and the user is notified once the search concludes.  
 
-Currently the direction of the program is to optimize the software performance by minimizing search redundancies and perform 
-quality analytical work on the listings such that the user receives meaningful output to determine whether a listing is 
-worth buying.  The dilemna is that there must be a compromise between the insightfulness of the analytics and 
-the spectrum of the items this software can accurately cover.  When this software was designed, it had the intent of being 
-used to search for low prices across clothes, since clothes can be easily distinguished by brand.  Attempting to apply this 
-code to a different item, for example, books, would require a different identifying method, and a whole new set of methods 
-to actually determine the value of a given book.  The code would then becomes exponentially more complex when handling
-a broader spectrum of items.
+
+
+Once all unique new listings have been parsed, the categorical table is updated if new listings have been added to 
+listings table.  The categorical table provides a broader overview of detail for a particular type of item.  Data gathered
+from a spectrum of listings can be further used to predict how  profitable an item is in terms of reselling, as well as 
+how easy it would be to sell said item.
+
+**Results**
+
+For every scan, SmartBuyer prints out a log indicating the results of the run.  Currently the result logs are printed through
+the console.  A sample output log is shown below.
