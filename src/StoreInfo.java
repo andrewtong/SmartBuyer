@@ -412,30 +412,6 @@ public class StoreInfo {
 		return false;
 	}	
 	
-	//CURRENTLY DOES NOT WORK
-	//Searches for underpriced items below a threshold value of 30% below the average price of individual brands.  
-	//searchLowPricesIndividualBrands is primarily used when the number of listings in the PSQL table is sufficient
-	//and the price variation across all number of brands is very high.
-	public static void searchLowPricesIndividualBrands(){
-		try{
-			statement = connection.createStatement();
-			connection.setAutoCommit(false);
-			statement.setFetchSize(0);
-			rset = statement.executeQuery("SELECT itemid, itembrand, itemtype, price, listingdate FROM " + table
-					+ "WHERE (SELECT price OVER (PARTITION BY itembrand) FROM listings) < 0.3*(SELECT avg(price) OVER "
-					+ "(PARTITION BY itembrand) FROM listings) ORDER BY price ASC");
-			while(rset.next()){
-				System.out.println("Item ID: " + rset.getInt("itemid") + " Brand: " + rset.getString("itembrand") + 
-						" Category: " + rset.getString("itemtype") + " Price: " + rset.getBigDecimal("price")
-						+ " Listing Date: " + rset.getString("listingdate"));
-			}
-			statement.close();
-		} catch (SQLException e){
-			System.out.println("Error while searching for low price offers across individual brands.");
-			e.printStackTrace();
-		}
-	}
-	
 	//Need to retrieve profitability and marketability from the cattable
 	//ParseListings already has brand, itemid, listingdate, and price
 	public static ItemListingInfo getNewItemInfo(String brandname){
