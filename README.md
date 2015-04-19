@@ -36,16 +36,22 @@ For each scanned listing, if the algorithm detects that the listing is an item o
 registered, it stores the listing along with its associated pricing information in a database, which in this project 
 is referred to as the listings table. A second check is performed against the existing pricing information for the type of
 information, which is stored in the categorical table.  If the scanned item meets a particular pricing threshold, it will
-be flagged as a low price item and the user is notified once the search concludes.  
+be flagged as a low price item and the user is notified once the search concludes.  Below is an example of what the listing
+table stores.
 
-
+![listingtable](https://cloud.githubusercontent.com/assets/10404525/7218674/40fa2548-e630-11e4-9cfb-447d92ed75eb.PNG)
 
 Once all unique new listings have been parsed, the categorical table is updated if new listings have been added to 
 listings table.  The categorical table provides a broader overview of detail for a particular type of item.  Data gathered
 from a spectrum of listings can be further used to predict how  profitable an item is in terms of reselling, as well as 
-how easy it would be to sell said item.
+how easy it would be to sell said item.  The following is an example of the data stored within the categorical table.
+
+![cattable](https://cloud.githubusercontent.com/assets/10404525/7218675/422b5810-e630-11e4-8e1f-7c8706c0d9a2.PNG)
 
 **Results**
 
 For every scan, SmartBuyer prints out a log indicating the results of the run.  Currently the result logs are printed through
-the console.  A sample output log is shown below.
+the console.  A sample output log is shown below.  In the case that the algorithm detects a low priced item, the item details
+will be printed out onto the log.
+
+![sampleoutput](https://cloud.githubusercontent.com/assets/10404525/7218673/3eeefde6-e630-11e4-991f-fba3685bfe00.PNG)
