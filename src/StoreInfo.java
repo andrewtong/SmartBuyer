@@ -364,59 +364,6 @@ public class StoreInfo {
 		}
 	}
 	
-	public static void patchCatTable(){
-		
-	}
-	
-	public static void updateListingsCatTable(){
-		
-	}
-	
-	
-	//Searches for underpriced items below a threshold value.  searchLowPricesAllBrands is primarily used
-	//when the number of listings in the PSQL table is still very minimal, and where there is insufficient
-	//data to search by individual brands.
-	public static void searchLowPricesAllBrands(BigDecimal threshold){
-		try{
-			statement = connection.createStatement();
-			connection.setAutoCommit(false);
-			statement.setFetchSize(0);
-			rset = statement.executeQuery("SELECT itemid, itembrand, itemtype, price, listingdate FROM " + table
-					+ "WHERE price < " + threshold + "*(SELECT avg(price) FROM listings) ORDER BY price ASC");
-			while(rset.next()){
-				System.out.println("Item ID: " + rset.getLong("itemid") + " Brand: " + rset.getString("itembrand") + 
-						" Category: " + rset.getString("itemtype") + " Price: " + rset.getBigDecimal("price")
-						+ " Listing Date: " + rset.getString("listingdate"));
-			}
-			statement.close();
-		} catch (SQLException e){
-			System.out.println("Error while searching for low price offers across all brands.");
-			e.printStackTrace();
-		}
-	}
-	
-	//Searches for underpriced items below a threshold value of 30% below the average price of all brands.  
-	//searchLowPricesAllBrands is primarily used when the number of listings in the PSQL table is still 
-	//very minimal, and where there is insufficient data to search by individual brands.
-	public static void searchLowPricesAllBrands(){
-		try{
-			statement = connection.createStatement();
-			connection.setAutoCommit(false);
-			statement.setFetchSize(0);
-			rset = statement.executeQuery("SELECT itemid, itembrand, itemtype, price, listingdate FROM " + table
-					+ "WHERE price < 0.3*(SELECT avg(price) FROM listings) ORDER BY price ASC");
-			while(rset.next()){
-				System.out.println("Item ID: " + rset.getInt("itemid") + " Brand: " + rset.getString("itembrand") + 
-						" Category: " + rset.getString("itemtype") + " Price: " + rset.getBigDecimal("price")
-						+ " Listing Date: " + rset.getString("listingdate"));
-			}
-			statement.close();
-		} catch (SQLException e){
-			System.out.println("Error while searching for low price offers across all brands.");
-			e.printStackTrace();
-		}
-	}
-	
 	//Searches for underpriced items below a threshold value of 30% below the average price of individual brands.  
 	//searchLowPricesIndividualBrands is primarily used when the number of listings in the PSQL table is sufficient
 	//and the price variation across all number of brands is very high.
