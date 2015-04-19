@@ -2,27 +2,39 @@ package at.smartBuyer.metadata;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class GenerateResults {	
 	
-	public void updateTotalFrequency(){
-		
+	StringBuilder resultlog = new StringBuilder();
+	
+	public void addResult(long itemid, String brandname, BigDecimal itemprice, int marketability, int profitability){
+		resultlog.append("Item ID: " + itemid);
+		resultlog.append(System.getProperty("line.separator"));
+		resultlog.append("Brand: " + brandname);
+		resultlog.append(System.getProperty("line.separator"));
+		resultlog.append("Price (USD): " + itemprice);
+		resultlog.append(System.getProperty("line.separator"));
+		resultlog.append("Marketability: " + marketability);
+		resultlog.append(System.getProperty("line.separator"));
+		resultlog.append("Profitability: " + profitability);
+		resultlog.append(System.getProperty("line.separator"));
+		resultlog.append(System.getProperty("line.separator"));
 	}
 	
-	public void updateFrequency(){
-		
-	}
 	
-	public void searchLastSeenDate(){
+	public String retrieveResultLog(){
+		boolean empty = false;
+		if(resultlog.length() ==0){
+			empty = true;
+		}
 		
-	}
-	
-	public void calculateAppearanceRate(){
+		if(empty){
+			resultlog.append("No items worth purchasing were found during this search.");
+		}
 		
-	}
-	
-	public void calculateAveragePrice(){
+		return resultlog.toString();
 		
 	}
 	
@@ -103,7 +115,7 @@ public class GenerateResults {
 		
 		if(uncertainty){
 			if(profitability > 1){
-				profitability =- 1;
+				profitability = profitability - 1;
 			}
 		}
 		
