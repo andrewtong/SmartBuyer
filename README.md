@@ -46,7 +46,7 @@ listings table.  The categorical table provides a broader overview of detail for
 from a spectrum of listings can be further used to predict how  profitable an item is in terms of reselling, as well as 
 how easy it would be to sell said item.  The following is an example of the data stored within the categorical table.
 
-![cattable](https://cloud.githubusercontent.com/assets/10404525/7218675/422b5810-e630-11e4-8e1f-7c8706c0d9a2.PNG)
+![cattable](https://cloud.githubusercontent.com/assets/10404525/7220986/1674eb30-e691-11e4-8642-0728f09b53a5.PNG)
 
 **Results**
 
