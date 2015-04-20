@@ -17,3 +17,9 @@ A big portion of version 2.0 was additionally devoted towards improving the user
 significantly more thorough and gives a user a greater sense of what is occuring during the search.  Furthermore, it is easy to 
 distinguish when the software is getting a lot of good results, or if the constraints need to be changed to search for more
 items.
+
+The code is now in general cleaner and the majority of unused blocks of code have been removed.  The code should be in general
+easier to read and is now more fluent. 
+
+Furthermore, a GUI is being worked on for SmartBuyer which will additionally be included once completed.  The purpose of the GUI
+is facilitate usage of the code without and additionally have more of an appeal towards the end user.
