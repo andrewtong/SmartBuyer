@@ -1,0 +1,25 @@
+Version 2.0
+4/19/2015
+
+Version 2.0 marks is the first patch where SmartBuyer can be deemed functional and suitable for usage, with several major
+features being added.  The major update was performed on the categorical table, commonly referred to as 'cattable' within the
+project.  The elements within 'cattable' track data for a broad amount of listings have been updated to include
+traditional variables such as the total number of times a listing have been seen, the average price for a given type of listing, 
+as well as more dynamic variables such as the predicted price variance of a type of listing and how easy it may be to sell 
+said type of listing, quantified by the variables profitability and marketability respectively.  
+
+With the addition of these new variables, the algorithm to find low priced items is now more accurate and simplified overall
+improving the overall result quality.  The variables from cattable are only updated with the addition of unique, relevant
+entries, minimizing the number of times the table needs to be updated.  The process can be further optimizied by updating a 
+single row on the table with accordance to a new entry, and will likely be implemented in a future patch.
+
+A big portion of version 2.0 was additionally devoted towards improving the user end of using SmartBuyer.  The output is now
+significantly more thorough and gives a user a greater sense of what is occuring during the search.  Furthermore, it is easy to 
+distinguish when the software is getting a lot of good results, or if the constraints need to be changed to search for more
+items.
+
+The code is now in general cleaner and the majority of unused blocks of code have been removed.  Generally speaking, the 
+progression of thought is now a lot more easier to understand and fluent.
+
+Furthermore, a GUI is being worked on for SmartBuyer which will additionally be included once completed.  The purpose of the GUI
+is facilitate usage of the code without and additionally have more of an appeal towards the end user.

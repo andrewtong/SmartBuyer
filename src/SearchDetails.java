@@ -2,6 +2,7 @@ package at.smartBuyer.detailabstraction;
 
 import java.io.File;
 
+import java.math.BigDecimal;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -77,16 +78,18 @@ public class SearchDetails {
 		}
         	try {
         		Scanner input = new Scanner(file);
+        		
         		while (input.hasNextLine()) {
-			String line = input.nextLine();
-			//Because the text file may potentially contain anything, it is important that all ' marks are 
-			//removed to ensure that the SQL database does not misinterpret the meaning.
-			line = line.replace("'", "");
-			if(!si.checkCategoricalDuplicate(line)){
-				si.insertCategorical(line);
-			}
-			input.close();
+				String line = input.nextLine();
+				//Because the text file may potentially contain anything, it is important that all ' marks are 
+				//removed to ensure that the SQL database does not misinterpret the meaning.
+				line = line.replace("'", "");
+				if(!si.checkCategoricalDuplicate(line)){
+					si.initiateCategorical(line, 0, new BigDecimal(0), 0, 0);
+				}
         		}
+			input.close();
+			
         	} catch (Exception ex) {
 			ex.printStackTrace();
 		}
