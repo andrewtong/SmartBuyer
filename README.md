@@ -37,7 +37,7 @@ registered, it stores the listing along with its associated pricing information 
 is referred to as the listings table. A second check is performed against the existing pricing information for the type of
 information, which is stored in the categorical table.  If the scanned item meets a particular pricing threshold, it will
 be flagged as a low price item and the user is notified once the search concludes.  Below is an example of what the listing
-table stores.
+table stores.  By default, the searches are configured towards designer coats and jackets.
 
 ![listingtable](https://cloud.githubusercontent.com/assets/10404525/7218674/40fa2548-e630-11e4-9cfb-447d92ed75eb.PNG)
 
